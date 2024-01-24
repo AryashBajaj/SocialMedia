@@ -2,4 +2,9 @@
 {% block title %}
 Home Page
 {% endblock title %}
-{% block body %} {% endblock body%}
+{% block body %} 
+<form action="/logout/" method="post">
+    {% csrf_token %}
+    <button type="submit" value="submit">Logout</button>
+</form>
+{% endblock body%}
