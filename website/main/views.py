@@ -8,7 +8,7 @@ from .models import Post
 # Create your views here.
 @login_required(login_url = "/login")
 def home(request) :
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by("-created_at")
     if request.method == "POST" :
         post_id = request.POST.get("post-id")
         user_id = request.POST.get("user-id")
@@ -59,3 +59,13 @@ def create_post(request) :
     else :
         form = PostForm()
     return render(request, "main/create_post.html", {"form" : form})
+
+@login_required(login_url="/login")
+def my_profile(request) :
+    posts = Post.objects.filter(author_id = request.user.id)
+    return render(request, "main/profile.html", {"posts" : posts})
+
+def profile_view(request, id) :
+    posts = Post.objects.filter(author_id = id)
+    viewing = User.objects.filter(id = id).first()
+    return render(request, "main/profile.html", {"posts" : posts, "viewing" : viewing})
