@@ -1,11 +1,18 @@
 {% extends "main/base.html" %}
 {% block title %}Home Page{% endblock title %}
 {% block content %}
+<script>
+    function clicked(event) {
+        if (!confirm("Are you Sure you want to permanently delete your account ?")) {
+            event.preventDefault();
+        }
+    }
+</script>
 <div class="card">
     <div class="card-body"><strong>@{{ user.username }}</strong></div>
     <form action="/delete" method="post" onsubmit = "clicked(event)">
         {% csrf_token %}
-        <button type="submit" value="submit" class="bt btn-danger btn-outline-warning">Delete Account</button>
+        <button type="submit" value="submit" class="bt btn-danger mb-2">Delete Account</button>
     </form>
 </div>
 {% for post in posts %}
