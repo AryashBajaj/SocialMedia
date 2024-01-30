@@ -63,9 +63,16 @@ def create_post(request) :
 @login_required(login_url="/login")
 def my_profile(request) :
     posts = Post.objects.filter(author_id = request.user.id)
-    return render(request, "main/profile.html", {"posts" : posts})
+    return render(request, "main/my_profile.html", {"posts" : posts})
 
 def profile_view(request, id) :
     posts = Post.objects.filter(author_id = id)
     viewing = User.objects.filter(id = id).first()
     return render(request, "main/profile.html", {"posts" : posts, "viewing" : viewing})
+
+@login_required(login_url = "/login")
+def delete_user(request) :
+    user = User.objects.filter(id = request.user.id)
+    logout(request)
+    user.delete()
+    return redirect("/login")
