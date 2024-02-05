@@ -15,7 +15,7 @@ class PostForm(forms.ModelForm) :
         fields = ["title", "description"]
 
 class ReplyForm(forms.ModelForm) :
-    content = forms.CharField(widget = forms.Textarea(attrs={'name' : 'Reply', 'style' : 'height : 3em;'}))
+    content = forms.CharField(widget = forms.Textarea(attrs={'name' : 'Reply', 'style' : 'height : 3em; width: 80%; margin-left: 10%'}))
     class Meta :
         model = Reply
         fields = ["content"]

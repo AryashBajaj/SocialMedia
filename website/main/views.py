@@ -103,6 +103,7 @@ def view_post(request, post_id) :
             comment = form.save(commit=False)
             comment.commentAuthor = request.user
             comment.replyTo = post
+            comment.save()
     else :
         form = ReplyForm()
     return render(request, "main/view_post.html", {"post" : post, "form" : form, "replies" : replies})
