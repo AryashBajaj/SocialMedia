@@ -9,7 +9,8 @@ urlpatterns = [
     path('create-post', views.create_post, name="create_post"),
     path('my-profile', views.my_profile, name="profile_view"),
     path('profile/<int:id>', views.profile_view, name="profile"),
-    path('delete', views.delete_user, name="delete")
+    path('delete', views.delete_user, name="delete"),
+    path('view-post/<int:post_id>', views.view_post, name="view-post"),
 ]
 
 

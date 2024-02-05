@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from main.models import Post
+from main.models import Post, Reply
 
 class RegisterForm(UserCreationForm) :
     email = forms.EmailField(required=True)
@@ -13,3 +13,9 @@ class PostForm(forms.ModelForm) :
     class Meta:
         model = Post
         fields = ["title", "description"]
+
+class ReplyForm(forms.ModelForm) :
+    content = forms.CharField(widget = forms.Textarea(attrs={'name' : 'Reply', 'style' : 'height : 3em;'}))
+    class Meta :
+        model = Reply
+        fields = ["content"]
