@@ -58,6 +58,14 @@
             <div>
                 <p class="card-text">{{reply.content}}</p>
             </div>
+            <div>
+                {% if user == reply.commentAuthor or perms.main.delete_post %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" name="reply-id" class="btn btn-danger" value="{{reply.id}}">Delete</button>
+                    </form>
+                {% endif %}
+            </div>
         </div>
         <div class="card-footer text-muted">{{ reply.created_at }}</div>
     {% endfor %}
