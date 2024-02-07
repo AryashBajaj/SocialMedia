@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from main.forms import RegisterForm, PostForm, ReplyForm
-from .models import Post
+from .models import Post, Reply
 
 # Create your views here.
 @login_required(login_url = "/login")
@@ -16,8 +16,8 @@ def home(request) :
         if post_id :
             post = posts.filter(id=post_id).first()
             if post and (post.author == request.user or request.user.has_perm("main.delete_post")) :
-                posts.pop(post)
                 post.delete()
+                posts = Post.objects.all().order_by("-created_at")
         
         if user_id_ban :
             user = User.objects.filter(id=user_id_ban).first()
@@ -41,14 +41,7 @@ def home(request) :
                     group.user_set.add(user)
                 except :
                     pass
-        # if parent_id :
-        #     replyform = ReplyForm(request.POST)
-        #     if replyform.is_valid() :
-        #         post = replyform.save(commit=False)
-        #         post.replyTo = mainPosts.get(id=parent_id)
-        #         post.commentAuthor = request.user
-        #         post.save()
-        #         return redirect("/home")
+
     return render(request, "main/home.html", {"posts" : posts})
 
 def sign_up(request) :
@@ -81,6 +74,7 @@ def my_profile(request) :
     posts = Post.objects.filter(author_id = request.user.id)
     return render(request, "main/my_profile.html", {"posts" : posts})
 
+@login_required(login_url="/login")
 def profile_view(request, id) :
     posts = Post.objects.filter(author_id = id)
     viewing = User.objects.filter(id = id).first()
@@ -96,7 +90,7 @@ def delete_user(request) :
 @login_required(login_url = "/login")
 def view_post(request, post_id) :
     post = Post.objects.get(id = post_id)
-    replies = post.replies.all()
+    replies = post.replies.all().order_by("-created_at")
     if request.method == "POST" :
         form = ReplyForm(request.POST)
         if form.is_valid() :
@@ -104,6 +98,8 @@ def view_post(request, post_id) :
             comment.commentAuthor = request.user
             comment.replyTo = post
             comment.save()
+            url = "/view-post/" + str(post_id)
+            return redirect(url)
     else :
         form = ReplyForm()
     return render(request, "main/view_post.html", {"post" : post, "form" : form, "replies" : replies})

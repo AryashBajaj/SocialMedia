@@ -5,11 +5,16 @@
 <script>
     function openform() {
         document.getElementById("container").style.display = "block";
+        document.getElementById("replyform").content.focus();
     }
     function closeform() {
         document.getElementById("container").style.display = "none";
     }
 
+    function formload() {
+        document.getElementById("replyform").clear();
+        document.getElementById("replyform").reset();
+    }
 </script>
 <div class="card mt-2">
     <div class="card-header"><strong>@{{ post.author.username }}</strong></div>
@@ -38,7 +43,9 @@
         </div>
     </div>
     <div class="card-footer text-muted d-flex flex-row justify-content-between">
-        <button type="button" onclick="openform()" class="btn btn-outline-primary">Reply</button>
+        {% if perms.main.add_post %}
+            <button type="button" onclick="openform()" class="btn btn-outline-primary">Reply</button>
+        {% endif %}
         <div class="card-footer d-flex flex-row justify-content-between text-muted">
             <div>
                 {{post.created_at}}
@@ -46,7 +53,7 @@
         </div>
     </div>
     <div id="container" class="mt-2" style="display: none;">
-        <form method="post">
+        <form id="replyform" method="post">
             {% csrf_token %}{{form|crispy}}
             <button type="submit" value="submit" class="btn btn-outline-success">Submit reply</button>
             <button type="button" class="btn btn-outline-warning" onclick="closeform()">Close</button>
@@ -60,7 +67,7 @@
             </div>
             <div>
                 {% if user == reply.commentAuthor or perms.main.delete_post %}
-                    <form method="post">
+                    <form method="post" onload="formload()">
                         {% csrf_token %}
                         <button type="submit" name="reply-id" class="btn btn-danger" value="{{reply.id}}">Delete</button>
                     </form>
