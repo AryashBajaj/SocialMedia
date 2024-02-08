@@ -21,3 +21,16 @@ class Reply(models.Model) :
 
     def __str__(self) :
         return self.content
+
+class userFollowing(models.Model) :
+    userId = models.ForeignKey(User, null=True, blank=True, related_name="following", on_delete = models.CASCADE)
+    followUserId = models.ForeignKey(User, null=True, blank=True, related_name="followers", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta :
+        constraints = [
+            models.UniqueConstraint('userId', 'followUserId', name="followChecker"),
+        ]
+
+    def __str__(self) :
+        return self.userId + " " + self.followUserId

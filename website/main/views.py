@@ -5,7 +5,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from main.forms import RegisterForm, PostForm, ReplyForm
 from .models import Post, Reply
 
-# Create your views here.
 @login_required(login_url = "/login")
 def home(request) :
     posts = Post.objects.all().order_by("-created_at")
