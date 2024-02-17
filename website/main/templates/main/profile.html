@@ -1,8 +1,8 @@
 {% extends "main/base.html" %}
 {% block title %}Home Page{% endblock title %}
 {% block content %}
-<div class="mt-4 p-5 bg-primary text-white rounded">
-    <div class="card-header"><strong>@{{ viewing.username }}</strong></div>
+<div class="mt-4 p-5 bg-black h-25 text-white rounded-4">
+    <div class="card-header"><strong>{{ viewing.first_name }} {{ viewing.last_name }}<br>@{{viewing.username}}</strong></div>
 </div>
 {% for post in posts %}
 <div class="card mt-2">
