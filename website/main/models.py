@@ -33,4 +33,4 @@ class userFollowing(models.Model) :
         ]
 
     def __str__(self) :
-        return self.userId + " " + self.followUserId
+        return str(self.userId) + " " + str(self.followUserId)

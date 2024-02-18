@@ -1,8 +1,18 @@
 {% extends "main/base.html" %}
 {% block title %}Home Page{% endblock title %}
 {% block content %}
-<div class="mt-4 p-5 bg-black h-25 text-white rounded-4">
-    <div class="card-header"><strong>{{ viewing.first_name }} {{ viewing.last_name }}<br>@{{viewing.username}}</strong></div>
+<div class="mt-4 p-5 bg-opacity-25 h-25 text-bg-success rounded-4 d-flex flex-row justify-content-between">
+    <div class="card-header text-dark opacity-75"><strong>{{ viewing.first_name }} {{ viewing.last_name }}<br>@{{viewing.username}}</strong></div>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {% if following %}
+                <button type="submit" name="unfollow-id" value="{{viewing.id}}" class="btn opacity-75 border-success">Unfollow</button>
+            {% else %}
+                <button type="submit" name="follow-id" value="{{viewing.id}}" class="btn btn-success opacity-75 border-success">Follow</button>
+            {% endif %}
+        <form>
+    </div>
 </div>
 {% for post in posts %}
 <div class="card mt-2">

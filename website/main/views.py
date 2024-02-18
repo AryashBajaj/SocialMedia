@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
 from main.forms import RegisterForm, PostForm, ReplyForm
-from .models import Post, Reply
+from .models import Post, Reply, userFollowing
 
 @login_required(login_url = "/login")
 def home(request) :
@@ -71,13 +71,32 @@ def create_post(request) :
 @login_required(login_url="/login")
 def my_profile(request) :
     posts = Post.objects.filter(author_id = request.user.id)
-    return render(request, "main/my_profile.html", {"posts" : posts})
+    followingCount = userFollowing.objects.filter(userId = request.user.id).count()
+    followersCount = userFollowing.objects.filter(followUserId = request.user.id).count()
+    return render(request, "main/my_profile.html", {"posts" : posts, "followingCount" : followingCount, "followersCount" : followersCount})
 
 @login_required(login_url="/login")
 def profile_view(request, id) :
     posts = Post.objects.filter(author_id = id)
-    viewing = User.objects.filter(id = id).first()
-    return render(request, "main/profile.html", {"posts" : posts, "viewing" : viewing})
+    user = User.objects.filter(id = id).first()
+    Following = False
+    if request.user.following.filter(followUserId = id).exists() :
+        Following = True
+    if request.method == "POST" :
+        follow_id = request.POST.get("follow-id")
+        unfollow_id = request.POST.get("unfollow-id")
+        if follow_id :
+            relation = userFollowing()
+            relation.userId = request.user
+            relation.followUserId = user
+            relation.save()
+            Following = True
+        elif unfollow_id :
+            relation = userFollowing.objects.get(userId = request.user.id, followUserId = unfollow_id)
+            relation.delete()
+            Following = False
+
+    return render(request, "main/profile.html", {"posts" : posts, "viewing" : user, "following" : Following})
 
 @login_required(login_url = "/login")
 def delete_user(request) :
