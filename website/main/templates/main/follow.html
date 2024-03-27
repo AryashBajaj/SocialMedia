@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+{% block title %} Followers list{% endblock title %}
+{% block content %}
+{% for user in followers %}
+    <div class="mt-4 p-5 bg-opacity-25 h-25 text-bg-success rounded-4 d-flex flex-row justify-content-between">
+        <div class="card-header text-dark opacity-75"><strong>{{user.first_name }} {{ user.last_name }}<br>@{{user.username}}</strong></div>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {% if following %}
+                    <button type="submit" name="unfollow-id" value="{{user.id}}" class="btn opacity-75 border-success">Unfollow</button>
+                {% else %}
+                    <button type="submit" name="follow-id" value="{{user.id}}" class="btn btn-success opacity-75 border-success">Follow</button>
+                {% endif %}
+            <form>
+        </div>
+    </div>
+{% endfor %}
+{% endblock content %}

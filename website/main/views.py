@@ -122,4 +122,19 @@ def view_post(request, post_id) :
         form = ReplyForm()
     return render(request, "main/view_post.html", {"post" : post, "form" : form, "replies" : replies})
 
+@login_required(login_url= "/login")
+def follow(request) :
+    followerSet = {u.userId for u in request.user.followeres.all()}
+    followingSet = {u.followUserId for u in request.user.following.all()}
+    Count = len(followerSet)
+    if request.method == "POST" :
+        follow_id = request.POST.get("follow-id")
+        unfollow_id = request.POST.get("unfollow-id")
+        if follow_id :
+            relation = userFollowing.objects.create(userId = request.user, followUserId = follow_id)
 
+    return render(request, "main/follow.html", {"followers" : followerSet, "Count" : Count})
+
+@login_required(login_url= "/login")
+def following_page(request) :
+    ...
