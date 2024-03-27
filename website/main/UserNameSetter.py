@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 
+#Script to names of all users. Rectifying a previous issue
+
 users = User.objects.all()
 for user in users :
     if user.first_name :
